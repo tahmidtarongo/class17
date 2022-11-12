@@ -1,5 +1,7 @@
+import 'package:auth_app/Repository/auth_repo.dart';
 import 'package:auth_app/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class SignUp extends StatefulWidget {
@@ -109,10 +111,24 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
               child: Center(
                   child: Text(
-                'Sign In',
+                'Sign Up',
                 style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
               )),
-            ),
+            ).onTap(() async{
+              try{
+                EasyLoading.show(status: 'Signing Up');
+                var status = await AuthRepo().signUpWithEmail(nameController.text, emailController.text, phoneController.text, passwordController.text);
+                if(status){
+                  EasyLoading.showSuccess('Sign Up Successful');
+                  SignIn().launch(context);
+                } else{
+                  EasyLoading.showError('User Exist');
+                }
+              }catch (e){
+                print(e.toString());
+                EasyLoading.showError(e.toString());
+              }
+            }),
             const SizedBox(
               height: 10.0,
             ),

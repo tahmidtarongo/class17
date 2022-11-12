@@ -1,4 +1,5 @@
 import 'package:auth_app/sign_in.dart';
+import 'package:auth_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SignIn(),
+      home: const SplashScreen(),
       builder: EasyLoading.init(),
     );
   }

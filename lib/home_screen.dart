@@ -1,6 +1,7 @@
 import 'package:auth_app/Repository/auth_repo.dart';
 import 'package:auth_app/model/User_profile_model.dart';
 import 'package:auth_app/splash_screen.dart';
+import 'package:auth_app/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -43,10 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 snapshot.data?.data?.user?.wallet?.balance.toString() ?? '',
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
-              Text('Log Out').onTap(() async {
+              ElevatedButton(onPressed: () => UpdateProfile(userProfileModel: snapshot.data!,).launch(context), child: const Text('Update Profile')),
+              const SizedBox(height: 20.0,),
+              const Text('Log Out').onTap(() async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('token', '');
                 SplashScreen().launch(context);

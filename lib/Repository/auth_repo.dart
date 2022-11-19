@@ -60,4 +60,54 @@ class AuthRepo {
 
   }
 
+  Future<bool> userProfileUpdate(String name, String email, String phoneNumber, dynamic filePath) async {
+    String updateUrl = Config.serverUrl + Config.profileUpdateUrl;
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token')!;
+    Map<String,String> body = {
+      'name': name,
+      'email': email,
+      'phone': phoneNumber
+    };
+    Map<String,String> header = {
+      'Authorization': 'Bearer $token'
+    };
+    Uri url = Uri.parse(updateUrl);
+    http.MultipartRequest request;
+    if(filePath == 'No Data'){
+      request = http.MultipartRequest('POST', url);
+      request.fields.addAll(body);
+      request.headers.addAll(header);
+    }else{
+      request = http.MultipartRequest('POST', url);
+      request.files.add(await http.MultipartFile.fromPath('image', filePath));
+      request.fields.addAll(body);
+      request.headers.addAll(header);
+    }
+    return await request.send().then((response) {
+      if(response.statusCode == 200){
+        return true;
+      }else {
+        return false;
+      }
+    });
+  }
+
+
+  Future<bool> updateProfileWithOutImage(String name, String email, String phoneNumber) async {
+    String signUpUrl = Config.serverUrl + Config.profileUpdateUrl;
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token')!;
+    var response = await http.post(Uri.parse(signUpUrl), body: <String, String>{'name': name, 'email': email, 'phone': phoneNumber},headers: {
+      'Authorization': 'Bearer $token'
+    });
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 422) {
+      throw Exception('User Have Exist');
+    } else {
+      throw Exception('User Have Exist');
+    }
+  }
+
 }
